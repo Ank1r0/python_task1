@@ -199,9 +199,6 @@ class Repository:
 
                 self.ready_to_use = True
 
-        
-
-
 
         self.conn.commit()
         print(f"Loading {name} functions finished succesfully.")
@@ -264,6 +261,32 @@ class Repository:
         cursor.close()
 
         return results
+        
+    def create_index(self):
+        print("Index cretion initiated.")
+
+        if(not self.checkFilesAndDb()):
+            return "Missing files or db, setup db and data first."
+        
+        cursor = self.conn.cursor()
+        
+        cursor.execute("""
+        SELECT name AS IndexName, 
+            type_desc AS IndexType
+        FROM sys.indexes 
+        WHERE name = 'idx_student_room_birthdate' 
+        AND object_id = OBJECT_ID('student');
+        """)
+
+        if(cursor.fetchone()):
+            print("Cursor already exists and will be dropped.")
+            cursor.execute("""drop index idx_student_room_birthdate on student""")
+
+        cursor.execute("""
+        CREATE INDEX idx_student_room_birthdate 
+        ON student (room, birthdate);
+        """)        
+        return "index created."
         
     
         

@@ -53,7 +53,6 @@ class OutputHandler:
 
 
         elif(format == "console"):
-            print("console")
 
             if isinstance(data, list):
                 print("\n--- QUERY RESULTS ---")
