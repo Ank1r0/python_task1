@@ -5,7 +5,8 @@ from app.outputF.output import OutputHandler as output
 
 def main():
     print("App is ready to use")
-    print("Enter the command...")
+    print("Enter command 'help' print list of all available command.\n" \
+    "The last section in help is an app intended flow, use those commands in order as written there to fully check app functionality.\n")
 
     is_running = True
 
