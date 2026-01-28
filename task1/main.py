@@ -15,10 +15,10 @@ def main():
         parsed_cmd = command_parser(input_command)
         
         # This returns the TUPLE (True/False, Data)
-        is_running, data = orchestra(parsed_cmd)
+        is_running, data, current_format = orchestra(parsed_cmd)
         
         # Now we pass that data to our SOLID output handler
-        output.display(data)
+        output.display(data,current_format)
 
 if __name__ == "__main__":
     main()

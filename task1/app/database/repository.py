@@ -2,15 +2,45 @@ from app.database.connection import ConnectionManager
 import json
 taskdb = 'somedb'
 
-PrepQueries = ["""
+PrepQueries = [
+        #query - 1
+        """
         select count(*) as StudentsInRoom, room from student
         group by room
         order by room
         """,
+        #query - 2
         """
-        select * from room
-        where id = 23
-        """]
+        SELECT TOP 5 room,AVG(YEAR(GETDATE()) - YEAR(birthdate)) AS AverageAge FROM student
+        group by room
+        order by AVG(YEAR(GETDATE()) - YEAR(birthdate))
+        """,
+        #query - 3
+        """
+        select top 5 room,MAX(YEAR(GETDATE()) - YEAR(birthdate)) - MIN(YEAR(GETDATE()) - YEAR(birthdate)) as AgeDifference,
+        MAX(YEAR(GETDATE()) - YEAR(birthdate)) as MaximalAge,
+        MIN(YEAR(GETDATE()) - YEAR(birthdate)) as MinimalAge
+        from student
+        group by room
+        order by MAX(YEAR(GETDATE()) - YEAR(birthdate)) - MIN(YEAR(GETDATE()) - YEAR(birthdate)) DESC
+        """,
+        #query - 4
+        """
+        SELECT room,COUNT(DISTINCT sex) as GenderDiversity
+        FROM student
+        GROUP BY room
+        HAVING COUNT(DISTINCT sex) > 1
+        order by room
+        """,
+        #query - 5
+        """
+        SELECT room,COUNT(DISTINCT sex) as GenderDiversity
+        FROM student
+        GROUP BY room
+        HAVING COUNT(DISTINCT sex) = 1
+        order by room
+        """,
+        ]
 
 class Repository:
         # Inside Repository class
@@ -224,7 +254,16 @@ class Repository:
         
         cursor.execute(PrepQueries[PrepQueryId])
 
-        return cursor.fetchall()
+        columns = [column[0] for column in cursor.description]
+    
+        results = []
+        for row in cursor.fetchall():
+            # Combine column names with row values into a dictionary
+            results.append(dict(zip(columns, row)))
+            
+        cursor.close()
+
+        return results
         
     
         

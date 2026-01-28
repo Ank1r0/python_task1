@@ -13,8 +13,24 @@ def command_parser(input_command):
     if(input_command == "exit"):
         return CommandResult(action="exit")
     
+    if(input_command == "index"):
+        return CommandResult(action="index")
+    
     if(input_command == "help"):
         return CommandResult(action="help")
+    
+    elif(input_command.find("output")== 0):      
+        print("Output cmd parsing.")
+        try:
+            cmd = CommandResult(action="output",
+                            out_format = input_command[input_command.find("-t")+3:])
+            print(f"outputType: {cmd.out_format}")                 
+            return cmd
+        except Exception as e:
+            return CommandResult(
+                action="internal_error"
+            )
+
     
     elif(input_command.find("load")== 0):      
         print("Load cmd parsing.")
