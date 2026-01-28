@@ -2,6 +2,16 @@ from app.database.connection import ConnectionManager
 import json
 taskdb = 'somedb'
 
+PrepQueries = ["""
+        select count(*) as StudentsInRoom, room from student
+        group by room
+        order by room
+        """,
+        """
+        select * from room
+        where id = 23
+        """]
+
 class Repository:
         # Inside Repository class
     def __init__(self, ConnectionManager):
@@ -16,6 +26,7 @@ class Repository:
         self.ready_to_use = True
         self.rooms_loaded = True
         self.students_loaded = True
+        return "data ready flags has been changed to TRUE"
 
     def query_ping(self):
               
@@ -26,7 +37,9 @@ class Repository:
         result = cursor.fetchone()
         cursor.close()
 
-        print("server is working")  if result else print("server doesn't work") 
+        if result:
+            return "server is working" 
+        return "server is not responding"
         
     def load(self,name,path):
         print("load initiated.")
@@ -175,47 +188,45 @@ class Repository:
             print("The data is not ready to be queried.")        
         else:
             print("The data is ready to be queried.")
+
+        return f"data loaded, table {name}."
             
-
-        
-    def query(self):
-
-        #--q2
-        #    SELECT TOP 5 room,AVG(YEAR(GETDATE()) - YEAR(birthdate)) AS SMTH FROM student
-        #    group by room
-        #    order by AVG(YEAR(GETDATE()) - YEAR(birthdate))
+    def checkFilesAndDb(self):
         
         cursor = self.conn.cursor()
 
         if(not self.ready_to_use):
             print("Database missing files, use load commands to populate the data.\n")
-            return
-        print("EXECUTING QUERY N1")
+            return False
         
         cursor.execute(f"SELECT name FROM sys.databases WHERE name = '{taskdb}'")
 
         exists = cursor.fetchone() 
         
-        
         if not(exists):
             print("Database is not ready to use, missing prepared database, use load function to create a database with the data.")
-            return
+            return False
 
         cursor.execute(f"use {taskdb}")
 
-        
-        #--Q1
-        cursor.execute("""
-        select count(*) as StudentsInRoom, room from student
-        group by room
-        order by room
-        """)
-        
+        return True
 
-        for datarow in cursor:
-            print(datarow)
+    
 
-        print("END OF QUERY.")
+    def query(self,PrepQueryId):
+
+        if(not self.checkFilesAndDb()):
+            return "Missing files or db, setup db and data first."
+
+        print(f"EXECUTING QUERY {PrepQueryId}")
+         
+        cursor = self.conn.cursor()
+        
+        cursor.execute(PrepQueries[PrepQueryId])
+
+        return cursor.fetchall()
+        
+    
         
 
         

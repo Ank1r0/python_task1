@@ -1,21 +1,24 @@
-#smth
+# app/main.py
 from app.commands.command_parser import command_parser
 from app.orchestra import orchestra
-def main():
+from app.outputF.output import OutputHandler as output
 
+def main():
     print("App is ready to use")
-    print("Enter the command, use -help to list all the commands.\nTo have a fully operating app use the command load")
-    print("Hint, the command load is used to populate 2 main tables, 'rooms' and 'students'\nExample of usage: load -n rooms -p filepath/rooms.json\n")
+    print("Enter the command...")
 
     is_running = True
 
-
     while is_running:
-        input_command = input()
-        is_running = orchestra(command_parser(input_command))
+        input_command = input("> ")
 
+        parsed_cmd = command_parser(input_command)
         
-
+        # This returns the TUPLE (True/False, Data)
+        is_running, data = orchestra(parsed_cmd)
+        
+        # Now we pass that data to our SOLID output handler
+        output.display(data)
 
 if __name__ == "__main__":
     main()

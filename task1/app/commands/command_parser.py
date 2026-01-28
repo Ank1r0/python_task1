@@ -31,7 +31,15 @@ def command_parser(input_command):
 
     elif(input_command.find("query")== 0):
         print("Query cmd parsing")
-        return CommandResult(action="query", query_id=1, out_format="xml")
+        try:
+            queryRez = CommandResult(action="query",
+                            query_id = int(input_command[input_command.find("-id")+3:]))
+            print(f"query id: {queryRez.query_id}")                 
+            return queryRez
+        except Exception as e:
+            return CommandResult(
+                action="internal_error"
+            )
     
     elif(input_command.find("ping")== 0):
         print("Ping cmd parsing")

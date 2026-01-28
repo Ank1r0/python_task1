@@ -8,23 +8,31 @@ repo_instance = Repository(db_mgr)
 def help_command():
         print("list of currently available commands:")
         print("load -n rooms -p rooms.json")
-        print("load -n students -p students.json") 
+        print("load -n students -p students.json")  
 
 def orchestra(CommandResult):
+
+    should_continue = True
+    display_data = None
+
     if(CommandResult.action == "exit"):
         db_mgr.disconnect()
-        return False
+        return False, "Closing the app."
+    
     elif(CommandResult.action == "load"):
-        repo_instance.load(CommandResult.name,CommandResult.path)
-    elif(CommandResult.action == "ping"): # ping the database
-        repo_instance.query_ping() 
+        display_data = repo_instance.load(CommandResult.name,CommandResult.path)
+
+    elif CommandResult.action == "ping":
+        display_data = repo_instance.query_ping()
+
     elif(CommandResult.action == "query"): 
-        repo_instance.query() 
+        display_data = repo_instance.query(CommandResult.query_id)
+
     elif(CommandResult.action == "help"):
-        help_command()
-        return True
+        display_data = "Some help text"
+
     elif(CommandResult.action == "dataready"): 
-        repo_instance.dataready() 
+        display_data = repo_instance.dataready() 
 
 
-    return True
+    return should_continue, display_data
