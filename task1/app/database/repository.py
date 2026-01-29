@@ -141,7 +141,7 @@ class Repository:
                 self.rooms_loaded = True
             
 
-        if(name == "students"):
+        elif(name == "students"):
        
             cursor.execute(f"SELECT name FROM sys.databases WHERE name = '{taskdb}'")
   
@@ -202,7 +202,9 @@ class Repository:
 
                 self.ready_to_use = True
 
-
+        else:
+            return f"The specified table with name: {name} cannot be loaded, load files possible only to 2 tables. 'rooms', 'students'."
+            
         self.conn.commit()
         print(f"Loading {name} functions finished succesfully.")
 

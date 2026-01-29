@@ -50,7 +50,7 @@ def orchestra(CommandResult):
     
     elif CommandResult.action == "output":
         msg = settings.set_format(CommandResult.out_format)
-        return True, msg, "output changed." 
+        return True,msg,"console" 
     
     elif(CommandResult.action == "load"):
         display_data = repo_instance.load(CommandResult.name,CommandResult.path)
