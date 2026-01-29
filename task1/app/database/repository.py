@@ -1,5 +1,6 @@
 from app.database.connection import ConnectionManager
 import json
+from app.file_instruments.input_checker import input_instrument
 taskdb = 'somedb'
 
 PrepQueries = [
@@ -75,9 +76,14 @@ class Repository:
         print("load initiated.")
         cursor = self.conn.cursor() 
 
+        data,input_msg = input_instrument.read_json_s(path) #using own input check and read function
+
+        if(data is None):
+            return input_msg
+
         if(name == "rooms"):
-            with open(path, 'r') as f:
-                data = json.load(f)
+
+            
 
             cursor.execute(f"SELECT name FROM sys.databases WHERE name = '{taskdb}'")
 
@@ -136,10 +142,7 @@ class Repository:
             
 
         if(name == "students"):
-            with open(path, 'r') as f:
-                data = json.load(f)
-
-        
+       
             cursor.execute(f"SELECT name FROM sys.databases WHERE name = '{taskdb}'")
   
             exists = cursor.fetchone()
@@ -241,6 +244,9 @@ class Repository:
     
 
     def query(self,PrepQueryId):
+
+        if PrepQueryId > len(PrepQueries):
+            return f"No prepared query for this index. Current pref queries amount:0 - {len(PrepQueries) - 1}"
 
         if(not self.checkFilesAndDb()):
             return "Missing files or db, setup db and data first."

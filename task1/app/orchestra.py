@@ -70,7 +70,11 @@ def orchestra(CommandResult):
         display_data = ""
 
     elif(CommandResult.action == "dataready"): 
-        display_data = repo_instance.dataready() 
+        display_data = repo_instance.dataready()
+
+    elif(CommandResult.action == "internal_error"): 
+        display_data = CommandResult.msg
+        
 
 
     return should_continue, display_data, "console"

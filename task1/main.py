@@ -1,7 +1,7 @@
 # app/main.py
 from app.commands.command_parser import command_parser
 from app.orchestra import orchestra
-from app.outputF.output import OutputHandler as output
+from app.file_instruments.output import OutputHandler as output
 
 def main():
     print("App is ready to use")
@@ -9,6 +9,7 @@ def main():
     "The last section in help is an app intended flow, use those commands in order as written there to fully check app functionality.\n")
 
     is_running = True
+
 
     while is_running:
         input_command = input("> ")
