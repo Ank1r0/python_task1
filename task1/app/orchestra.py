@@ -2,8 +2,6 @@
 from app.database.repository import Repository
 from app.database.connection import ConnectionManager
 from app.config.settings import AppSettings
-db_mgr = ConnectionManager() 
-repo_instance = Repository(db_mgr)
 
 def help_command():
         print("List of all available command:\n------------\n" \
@@ -38,7 +36,7 @@ def help_command():
 
 settings = AppSettings()
 
-def orchestra(CommandResult):
+def orchestra(CommandResult, repo_instance, db_mgr):
 
     should_continue = True
     display_data = None
