@@ -247,7 +247,7 @@ class Repository:
 
     def query(self,PrepQueryId):
 
-        if PrepQueryId > len(PrepQueries):
+        if PrepQueryId >= len(PrepQueries):
             return f"No prepared query for this index. Current pref queries amount:0 - {len(PrepQueries) - 1}"
 
         if(not self.checkFilesAndDb()):

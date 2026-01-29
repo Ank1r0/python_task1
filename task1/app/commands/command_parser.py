@@ -23,7 +23,6 @@ def command_parser(input_command):
     elif(input_command.find("output")== 0):      
         print("Output cmd parsing.")
         try:           
-            #FIX
             if "-t" not in input_command:
                 raise ValueError("Incomplete command structure")
             
