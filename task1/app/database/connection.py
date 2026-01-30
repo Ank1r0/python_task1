@@ -1,4 +1,3 @@
-from tkinter import END
 import pyodbc
 taskdb = 'somedb'
 class ConnectionManager:
@@ -7,7 +6,6 @@ class ConnectionManager:
         '''
         DRIVER={ODBC Driver 18 for SQL Server};SERVER=localhost,1434;DATABASE=master;UID=sa;PWD=SuperSafe_Pass99;Encrypt=no;TrustServerCertificate=yes
         '''
-
 
         self.conn_str = conn_str
 
@@ -28,7 +26,7 @@ class ConnectionManager:
             self.connect()
         except:
             print("Connection failed. The most common reason is a driver version. Check your ODBC Driver version. P.S. Should be ODBC Driver 18 for SQL Server.")
-        END
+        
 
         
 
