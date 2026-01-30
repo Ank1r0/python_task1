@@ -26,18 +26,18 @@ List of prepared queries:
 # 2. Architecture & Design Principles
 ## Structure
 ├── app/
-│   ├── commands/  
-│	  │    └──`command_parser.py`  -- Parsing string into the command attributes
-│   ├── config/         
-│	  │    └── `settings.py` -- Stores the settings and function for their modification
-│   ├── database/       
-│	  │    ├── `connection.py` -- Connection manager( connect and disconnect )
-│	  │    └── `repository.py` -- DB Interactions like: ping, query, etc.
-│   ├── file_instruments/ 
-│	  │    ├── `input_checker.py` -- Check the file's accesability and reads it.
-│	  │    └── `output.py` -- Prints the data into the file.
-│   └── `orchestra.py` --  Dispatcher, controls the flow
-├── `main.py`             # Entry point, main cycle starts here.
+│   ├── commands/
+│   │   └── command_parser.py       -- Parsing string into command attributes
+│   ├── config/
+│   │   └── settings.py             -- Stores settings and modification functions
+│   ├── database/
+│   │   ├── connection.py           -- Connection manager (connect/disconnect)
+│   │   └── repository.py           -- DB Interactions: ping, query, etc.
+│   ├── file_instruments/
+│   │   ├── input_checker.py        -- Checks accessibility and reads files
+│   │   └── output.py               -- Prints data into files
+│   └── orchestra.py                -- Dispatcher, controls the flow
+├── main.py                         -- Entry point, main cycle starts here
 └── Dockerfile
        
 
