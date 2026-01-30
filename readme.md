@@ -25,20 +25,20 @@ List of prepared queries:
 
 # 2. Architecture & Design Principles
 ## Structure
-├── app/..........................................................<br>
-│...├── commands/.................................................<br>
-│...│...└── command_parser.py -- Parsing string into attributes...<br>
-│...├── config/...................................................<br>
-│...│...└── settings.py -- Stores settings and modifications.....<br>
-│...├── database/.................................................<br>
-│...│...├── connection.py -- Connection manager..................<br>
-│...│...└── repository.py -- DB Interactions: ping, query, etc...<br>
-│...├── file_instruments/.........................................<br>
-│...│...├── input_checker.py -- Checks access and reads files...<br>
-│...│...└── output.py -- Prints data into the file...............<br>
-│...└── orchestra.py -- Dispatcher, controls the flow............<br>
-├── main.py -- Entry point, main cycle starts here...............<br>
-└── Dockerfile -- Container configuration.........................<br>
+├── app/<br>
+│...├── commands/<br>
+│...│...└── command_parser.py -- Parsing string into attributes<br>
+│...├── config/<br>
+│...│...└── settings.py -- Stores settings and modifications<br>
+│...├── database/<br>
+│...│...├── connection.py -- Connection manager<br>
+│...│...└── repository.py -- DB Interactions: ping, query, etc<br>
+│...├── file_instruments/<br>
+│...│...├── input_checker.py -- Checks access and reads files<br>
+│...│...└── output.py -- Prints data into the file<br>
+│...└── orchestra.py -- Dispatcher, controls the flow<br>
+├── main.py -- Entry point, main cycle starts here<br>
+└── Dockerfile -- Container configuration<br>
        
 
 ## 2.2 Component Architecture
