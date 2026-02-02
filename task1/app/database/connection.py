@@ -3,10 +3,6 @@ taskdb = 'somedb'
 class ConnectionManager:
     def __init__(self,conn_str = None):
         
-        '''
-        DRIVER={ODBC Driver 18 for SQL Server};SERVER=localhost,1434;DATABASE=master;UID=sa;PWD=SuperSafe_Pass99;Encrypt=no;TrustServerCertificate=yes
-        '''
-
         self.conn_str = conn_str
 
         try:
@@ -20,7 +16,8 @@ class ConnectionManager:
                 
                 # Connection string
                 conn_str = f'DRIVER={driver};SERVER={server},{port};DATABASE={database};UID={username};PWD={password};Encrypt=no;TrustServerCertificate=yes'
-
+                #print(conn_str)
+                
             self.congif = conn_str
             self.connection = None
             self.connect()
