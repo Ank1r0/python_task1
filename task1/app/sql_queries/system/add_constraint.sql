@@ -1,0 +1,3 @@
+ALTER TABLE student ADD CONSTRAINT Table_2_room
+FOREIGN KEY (room)
+REFERENCES room (id);

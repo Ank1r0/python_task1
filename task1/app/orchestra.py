@@ -54,7 +54,9 @@ def orchestra(CommandResult, repo_instance, db_mgr):
         return True, msg, "console"
 
     elif CommandResult.action == "load":
-        display_data = repo_instance.load(CommandResult.name, CommandResult.path)
+        display_data = repo_instance.load_db_structure_from_ddl(
+            CommandResult.name, CommandResult.path
+        )
 
     elif CommandResult.action == "ping":
         display_data = repo_instance.query_ping()

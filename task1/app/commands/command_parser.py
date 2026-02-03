@@ -1,6 +1,16 @@
+import argparse
+import shlex
+
+
 class CommandResult:
     def __init__(
-        self, action, name=None, path=None, query_id=None, out_format=None, msg=None
+        self,
+        action=None,
+        name=None,
+        path=None,
+        query_id=None,
+        out_format=None,
+        msg=None,
     ):
         self.action = action
         self.name = name
@@ -10,78 +20,51 @@ class CommandResult:
         self.msg = msg
 
 
+def argparse_instance():
+    parser = argparse.ArgumentParser(prog="MyTool", exit_on_error=False)
+
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    load_parser = subparsers.add_parser("load")
+    load_parser.add_argument("-n", "--name", required=True)
+    load_parser.add_argument("-p", "--path", required=True)
+
+    query_parser = subparsers.add_parser("query")
+    query_parser.add_argument("-id", required=True, type=int)
+
+    output_parser = subparsers.add_parser("output")
+    output_parser.add_argument("-t", "--type", required=True)
+
+    subparsers.add_parser("ping")
+    subparsers.add_parser("index")
+    subparsers.add_parser("dataready")
+    subparsers.add_parser("help")
+    subparsers.add_parser("exit")
+
+    return parser
+
+
 def command_parser(input_command):
+    parser = argparse_instance()
 
-    if input_command == "exit":
-        return CommandResult(action="exit")
+    try:
+        args_list = shlex.split(input_command)  # split by spaces between
+        parsed = parser.parse_args(args_list)  # parsing into the parser
 
-    if input_command == "index":
-        return CommandResult(action="index")
+        args_dict = vars(parsed)  # Convert the argparse Namespace to a dictionary
 
-    if input_command == "help":
-        return CommandResult(action="help")
+        mapping = {
+            "command": "action",
+            "id": "query_id",
+            "type": "out_format",
+        }  # Rename keys if they don't match CommandResult exactly
 
-    elif input_command.find("output") == 0:
-        print("Output cmd parsing.")
-        try:
-            if "-t" not in input_command:
-                raise ValueError("Incomplete command structure")
+        final_kwargs = {mapping.get(k, k): v for k, v in args_dict.items()}
+        # used to rename mappings if they don't match, as an example command is action, the key should be renamed
 
-            out_format = input_command[input_command.find("-t") + 3 :]
+        return CommandResult(**final_kwargs)  # ** autofilling
 
-            if out_format is None:
-                raise ValueError("Output format cannot be empty.")
-
-            return CommandResult(action="output", out_format=out_format)
-        except Exception as e:
-            return CommandResult(action="internal_error", msg=str(e))
-
-    elif input_command.find("load") == 0:
-        print("Load cmd parsing.")
-
-        try:
-
-            if "-n" not in input_command or "-p" not in input_command:
-                raise ValueError("Incomplete command structure")
-
-            name = input_command[
-                input_command.find("-n") + 3 : input_command.find("-p") - 1
-            ]
-            path = input_command[input_command.find("-p") + 3 :]
-
-            if name is None or path is None:
-                raise ValueError("Name or Path cannot be empty")
-
-            return CommandResult(action="load", name=name, path=path)
-
-        except Exception as e:
-            return CommandResult(action="internal_error", msg=str(e))
-
-    elif input_command.find("query") == 0:
-        print("Query cmd parsing")
-        try:
-
-            if "-id" not in input_command:
-                raise ValueError("Incomplete command structure")
-
-            query_id = int(input_command[input_command.find("-id") + 3 :])
-
-            if query_id is None or query_id < 0:
-                raise ValueError("Wrong id for a query.")
-
-            return CommandResult(action="query", query_id=query_id)
-        except Exception as e:
-            return CommandResult(action="internal_error", msg=str(e))
-
-    elif input_command.find("ping") == 0:
-        print("Ping cmd parsing")
-        return CommandResult(action="ping")
-
-    elif input_command.find("dataready") == 0:
-        print("ready data parsing")
-        return CommandResult(action="dataready")
-
-    else:
+    except (argparse.ArgumentError, SystemExit):
         print(
             "Wrong command input, enter help if you need list of all available commands"
         )

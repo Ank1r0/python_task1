@@ -7,8 +7,8 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler("app.log"),  # Log to file
-        logging.StreamHandler(),  # Also log to console
+        logging.FileHandler("app.log"),
+        logging.StreamHandler(),
     ],
 )
 
@@ -25,8 +25,7 @@ class ConnectionManager:
                 conn_str = os.getenv("DB_CONNECTION_STRING")
                 if conn_str is None:
                     raise ValueError("No connection")
-                # for testing usage only
-                # DRIVER={ODBC Driver 18 for SQL Server};SERVER=localhost,1433;DATABASE=master;UID=sa;PWD=PASSword8;Encrypt=no;TrustServerCertificate=yes
+
             self.congif = conn_str
             self.connection = None
             self.connect()
