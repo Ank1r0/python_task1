@@ -1,6 +1,11 @@
 from app.database.repository import Repository
 from app.database.connection import ConnectionManager
 from app.config.settings import AppSettings
+from app.file_instruments.logger_setup import get_logger
+
+logger = get_logger(__name__)
+
+Settings = AppSettings()
 
 
 def help_command():
@@ -36,46 +41,53 @@ def help_command():
     )
 
 
-settings = AppSettings()
-
-
 def orchestra(CommandResult, repo_instance, db_mgr):
 
     should_continue = True
     display_data = None
-    target_format = settings.output_format
 
-    if CommandResult.action == "exit":
-        db_mgr.disconnect()
-        return False, "Closing the app.", "console"
+    try:
+        if CommandResult.action == "exit":
+            db_mgr.disconnect()
+            return False, "Closing the app.", "console"
 
-    elif CommandResult.action == "output":
-        msg = settings.set_format(CommandResult.out_format)
-        return True, msg, "console"
+        elif CommandResult.action == "output":
+            msg = Settings.set_format(CommandResult.out_format)
+            return True, msg, "console"
 
-    elif CommandResult.action == "load":
-        display_data = repo_instance.load_db_structure_from_ddl(
-            CommandResult.name, CommandResult.path
-        )
+        elif CommandResult.action == "load":
+            display_data = repo_instance.load_db_structure_from_ddl(
+                CommandResult.name, CommandResult.path
+            )
 
-    elif CommandResult.action == "ping":
-        display_data = repo_instance.query_ping()
+        elif CommandResult.action == "ping":
+            display_data = repo_instance.query_ping()
 
-    elif CommandResult.action == "index":
-        display_data = repo_instance.create_index()
+        elif CommandResult.action == "index":
+            display_data = repo_instance.create_index()
 
-    elif CommandResult.action == "query":
-        display_data = repo_instance.query(CommandResult.query_id)
-        return should_continue, display_data, settings.output_format
+        elif CommandResult.action == "query":
+            display_data = repo_instance.query(CommandResult.query_id)
+            return should_continue, display_data, Settings.output_format
 
-    elif CommandResult.action == "help":
-        help_command()
-        display_data = ""
+        elif CommandResult.action == "help":
+            help_command()
+            display_data = ""
 
-    elif CommandResult.action == "dataready":
-        display_data = repo_instance.dataready()
+        elif CommandResult.action == "dataready":
+            display_data = repo_instance.dataready()
 
-    elif CommandResult.action == "internal_error":
-        display_data = CommandResult.msg
+        elif CommandResult.action == "internal_error":
+            display_data = CommandResult.msg
 
-    return should_continue, display_data, "console"
+        if display_data == False:
+            display_data = "Error."
+        elif display_data == True:
+            display_data = "Done."
+
+        return should_continue, display_data, "console"
+    except Exception as e:
+        # This catches EVERY error from every layer (File, DB, etc.)
+        # We log it for the developer and show it to the user
+        logger.error(f"Action failed: {e}")
+        display_data = f"Error: {str(e)}"

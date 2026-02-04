@@ -2,6 +2,9 @@ from app.database.connection import ConnectionManager
 import json
 from app.file_instruments.input_checker import input_instrument
 from app.file_instruments.sql_reader import SqlReader
+from app.file_instruments.logger_setup import get_logger
+
+logger = get_logger(__name__)
 
 
 class Repository:
@@ -18,7 +21,7 @@ class Repository:
         self.ready_to_use = True
         self.rooms_loaded = True
         self.students_loaded = True
-        return "data ready flags has been changed to TRUE"
+        return True
 
     def query_ping(self):
         """
@@ -31,24 +34,19 @@ class Repository:
         cursor.close()
 
         if result:
-            return "Server is working."
-        return "Server is not responding."
+            return True
+        return False
 
-    def load_db_structure_from_ddl(self, name, path):  # fixed
-        print("load initiated.")
+    def load_db_structure_from_ddl(self, name, path):
         cursor = self.conn.cursor()
 
-        data, input_msg = input_instrument.read_json_s(path)
-
-        if data is None:
-            return input_msg
+        data = input_instrument.read_json_s(path)
 
         """INIT DB CHECKS ID DB IS EXISTS, IF NOT CREATE"""
         cursor.execute(SqlReader.load_query("init_db.sql"))
         cursor.execute(SqlReader.load_query("drop_constraint.sql"))
 
         if name == "rooms":
-
             cursor.execute(SqlReader.load_query("init_rooms.sql"))
 
             sql = "INSERT INTO ROOM (id, RoomName) VALUES (?, ?)"
@@ -58,9 +56,10 @@ class Repository:
                 for entry in data:
                     # Pass values as a tuple to prevent SQL injection
                     cursor.execute(sql, (entry["id"], entry["name"]))
-            except:
-                return f"Error during loading {name}"
+            except Exception as e:
+                logger.exception(f"Insert {name} into database failed. {e}")
                 success = False
+                return False
 
             if success:
                 self.rooms_loaded = True
@@ -84,15 +83,15 @@ class Repository:
                             entry["sex"],
                         ),
                     )
-            except:
-                print(f"Error during loading {name}")
+            except Exception as e:
+                logger.exception(f"Insert {name} into database failed. {e}")
                 success = False
 
             if success:
                 self.students_loaded = True
 
         else:
-            return f"The specified table with name: {name} cannot be loaded, load files possible only to 2 tables. 'rooms', 'students'."
+            return f"Predefined tables only."  # ?
 
         if self.rooms_loaded & self.students_loaded:
 
@@ -112,7 +111,7 @@ class Repository:
         else:
             print("The data is ready to be queried.")
 
-        return f"data loaded, table {name}."
+        return True
 
     def checkFilesAndDb(self):  # fixed
         query = SqlReader.load_query("check_db_integrity.sql")
@@ -133,7 +132,7 @@ class Repository:
                     break
             return False
         except Exception as e:
-            print(f"Error during integrity check: {e}")
+            logger.error(f"Error during integrity check: {e}")
             return False
 
         finally:
@@ -142,14 +141,14 @@ class Repository:
     def query(self, prepQueryId):  # fixed
 
         if not self.checkFilesAndDb():
-            return "Missing files or db, setup db and data first."
+            return False
 
         print(f"EXECUTING QUERY {prepQueryId}")
 
         prepQuery = SqlReader.get_query_by_id(prepQueryId)
 
         if prepQuery is None:
-            return f"Missing query ID."
+            return False
 
         cursor = self.conn.cursor()
 
@@ -168,10 +167,8 @@ class Repository:
 
     def create_index(self):  # fixed
 
-        print("Index cretion initiated.")
-
         if not self.checkFilesAndDb():
-            return "Missing files or db, setup db and data first."
+            return False
 
         query = SqlReader.load_query("ensure_index.sql")
         cursor = self.conn.cursor()
@@ -179,6 +176,7 @@ class Repository:
         try:
             cursor.execute(query)
             self.conn.commit()
-            return "Index refreshed and created successfully."
+            return True
         except Exception as e:
-            return f"Database error during index creation: {e}"
+            logger.error(f"Creating index failed. Error: {e}")
+            return False

@@ -8,5 +8,5 @@ class AppSettings:
         valid_formats = ["xml", "json", "console"]
         if new_format in valid_formats:
             self.output_format = new_format
-            return f"Output format changed to {new_format}"
-        return f"Invalid format: {new_format}"
+            return True
+        return False
