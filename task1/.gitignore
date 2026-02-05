@@ -1,0 +1,11 @@
+.venv/
+Scripts/
+Lib/
+Include/
+pip-25.3.dist-info/
+pyodbc-5.3.0.dist-info/
+__pycache__/
+*.dist-info/
+pyvenv.cfg
+app.log
+*.xml
