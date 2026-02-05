@@ -10,14 +10,12 @@ class CommandResult:
         path=None,
         query_id=None,
         out_format=None,
-        msg=None,
     ):
         self.action = action
         self.name = name
         self.path = path
         self.query_id = query_id
         self.out_format = out_format
-        self.msg = msg
 
 
 def argparse_instance():
@@ -64,8 +62,5 @@ def command_parser(input_command):
 
         return CommandResult(**final_kwargs)  # ** autofilling
 
-    except (argparse.ArgumentError, SystemExit):
-        print(
-            "Wrong command input, enter help if you need list of all available commands"
-        )
-        return CommandResult(action="error")
+    except:
+        raise ValueError("Wrong command.")

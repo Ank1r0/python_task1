@@ -12,8 +12,7 @@ class SqlReader:
             with open(file_path, "r") as f:
                 return f.read()
         except FileNotFoundError:
-            print(f"Error: SQL file {file_name} not found.")
-            return None
+            raise ValueError(f"Error: SQL file {file_name} not found.")
 
     @staticmethod
     def get_query_by_id(query_id):
@@ -26,6 +25,5 @@ class SqlReader:
         try:
             with open(file_path, "r") as f:
                 return f.read()
-        except FileNotFoundError:
-            print(f"Error: SQL file with a query number'{query_id}' not found.")
-            return None
+        except:
+            raise ValueError(f"SQL file with a query number'{query_id}' not found.")

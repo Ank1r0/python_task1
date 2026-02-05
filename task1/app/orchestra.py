@@ -56,12 +56,14 @@ def orchestra(CommandResult, repo_instance, db_mgr):
             return True, msg, "console"
 
         elif CommandResult.action == "load":
-            display_data = repo_instance.load_db_structure_from_ddl(
+            display_data = repo_instance.load_experiment_not_safe(
                 CommandResult.name, CommandResult.path
             )
 
         elif CommandResult.action == "ping":
-            display_data = repo_instance.query_ping()
+            display_data = (
+                "Connected" if repo_instance.query_ping() else "Not connected"
+            )
 
         elif CommandResult.action == "index":
             display_data = repo_instance.create_index()
@@ -77,17 +79,6 @@ def orchestra(CommandResult, repo_instance, db_mgr):
         elif CommandResult.action == "dataready":
             display_data = repo_instance.dataready()
 
-        elif CommandResult.action == "internal_error":
-            display_data = CommandResult.msg
-
-        if display_data == False:
-            display_data = "Error."
-        elif display_data == True:
-            display_data = "Done."
-
         return should_continue, display_data, "console"
     except Exception as e:
-        # This catches EVERY error from every layer (File, DB, etc.)
-        # We log it for the developer and show it to the user
-        logger.error(f"Action failed: {e}")
-        display_data = f"Error: {str(e)}"
+        raise ValueError(f"Action failed: {e}")

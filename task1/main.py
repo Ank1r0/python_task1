@@ -8,7 +8,7 @@ import os
 
 from app.file_instruments.logger_setup import get_logger
 
-logger = get_logger(__name__)
+logger = get_logger("PyAppSQL:")
 
 
 def main():
@@ -61,7 +61,6 @@ def main():
             # Now we pass that data to our SOLID output handler
             output.display(data, current_format)
         except Exception as e:
-            print(f"\n[APPLICATION ERROR]: {e}")
             logger.error(f"Error during command execution. {e}")
 
 
