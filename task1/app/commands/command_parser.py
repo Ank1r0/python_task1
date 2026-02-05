@@ -2,6 +2,15 @@ import argparse
 import shlex
 
 
+"""
+CommandResult
+Data Transfer Object (DTO) for standardized command handling.
+Represents the unified structure of any command entered by the user. 
+By wrapping parsed arguments into this class, the Orchestra doesn't 
+need to know about Argparse—it only deals with CommandResult objects.
+"""
+
+
 class CommandResult:
     def __init__(
         self,
@@ -16,6 +25,15 @@ class CommandResult:
         self.path = path
         self.query_id = query_id
         self.out_format = out_format
+
+
+"""
+argparse_instance
+Configures the Command Line Interface (CLI) structure.
+Defines all available subcommands (load, query, ping, etc.) and their required 
+arguments. 'exit_on_error=False' is critical here so that a typo doesn't 
+crash the entire application, but instead allows the parser to catch the error.
+"""
 
 
 def argparse_instance():
@@ -40,6 +58,16 @@ def argparse_instance():
     subparsers.add_parser("exit")
 
     return parser
+
+
+"""
+command_parser
+The logic bridge between raw user input and the application's Orchestra.
+1. Uses 'shlex' to correctly split input strings (handling quoted paths).
+2. Maps CLI-specific argument names (like 'id' or 'type') to the internal 
+   CommandResult naming convention.
+3. Returns a validated CommandResult object or raises a ValueError on failure.
+"""
 
 
 def command_parser(input_command):

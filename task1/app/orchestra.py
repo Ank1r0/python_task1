@@ -42,6 +42,14 @@ def help_command():
 
 
 def orchestra(CommandResult, repo_instance, db_mgr):
+    """
+    Orchestration Module: The Central Command Dispatcher.
+
+    This module acts as the 'Brain' of the application, implementing the
+    Command Pattern. It routes validated CommandResult objects to the
+    appropriate Repository methods or system configurations, managing
+    the overall application flow and session state.
+    """
 
     should_continue = True
     display_data = None

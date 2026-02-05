@@ -55,11 +55,21 @@ TABLE_CONFIG = {
 
 
 # ------------------------------------------------
+
+"""
+Repository Class: The Data Access Layer (DAL).
+
+This class serves as the sole interface between the application's business 
+logic and the SQL Server database. It abstracts complex SQL operations 
+behind Python methods, managing transactions, data integrity, and 
+high-performance batch processing.
+"""
+
+
 class Repository:
-    # Inside Repository class
+
     def __init__(self, ConnectionManager):
         self.mgr = ConnectionManager
-        # .connect() returns the active connection object
         self.conn = self.mgr.connect()
         self.ready_to_use = False
         self.rooms_loaded = False
@@ -86,6 +96,16 @@ class Repository:
         return False
 
     def load_experiment_not_safe(self, name, path):
+        """
+        Performs a high-speed batch load of JSON data into the database.
+
+        1. Validates table metadata from TABLE_CONFIG.
+        2. Executes pre-load DDL (Initializes tables and drops constraints).
+        3. Wipes existing data using TRUNCATE for speed and cleanliness.
+        4. Transforms JSON data via 'cleaners' and maps it to SQL columns.
+        5. Utilizes 'fast_executemany' with explicit 'setinputsizes' to
+           ensure maximum throughput and prevent ODBC buffer errors.
+        """
 
         if name not in TABLE_CONFIG:
             raise ValueError(f"Table '{name}' is not defined in configuration.")
@@ -153,7 +173,15 @@ class Repository:
             logger.exception(f"Critical failure loading {name}")
             raise RuntimeError(f"Database load failed for {name}: {e}")
 
-    def checkFilesAndDb(self):  # fixed
+    def checkFilesAndDb(self):
+        """
+        checkFilesAndDb
+        Verifies the operational state of the database.
+
+        Executes an integrity check script to ensure all required tables
+        exist and contain data. This prevents the application from
+        running queries against an uninitialized or corrupt schema.
+        """
         query = SqlReader.load_query("check_db_integrity.sql")
         cursor = self.conn.cursor()
 
@@ -172,13 +200,20 @@ class Repository:
                     break
             return False
         except Exception as e:
-            logger.error(f"Error during integrity check: {e}")
-            return False
+            raise ValueError(f"Populate the data. {e}")
 
         finally:
             cursor.close()
 
-    def query(self, prepQueryId):  # fixed
+    def query(self, prepQueryId):
+        """
+        query
+        Executes a pre-defined SQL query by ID and returns structured data.
+
+        This method retrieves the SQL string from the SqlReader, executes it,
+        and maps the resulting rowsets into a list of Python dictionaries,
+        where keys are the database column names.
+        """
 
         if not self.checkFilesAndDb():
             raise ValueError("Cannot interact with an empty database.")

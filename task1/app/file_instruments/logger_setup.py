@@ -11,6 +11,6 @@ logging.basicConfig(
 )
 
 
-# This is the "Base" function you can use to get a logger in any file
+# This is the "Base" function can by used to get a logger in any file
 def get_logger(name):
     return logging.getLogger(name)

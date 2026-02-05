@@ -147,3 +147,12 @@ pyodbc.ProgrammingError: ('42000', "[42000] [Microsoft][ODBC Driver 18 for SQL S
 2026-02-05 14:32:24,793 - PyAppSQL.Repositpory: - INFO - Wiping old data from table: room
 2026-02-05 14:33:41,097 - PyAppSQL: - ERROR - Error during command execution. Action failed: Cannot create index in not prepared database.
 2026-02-05 14:35:49,367 - PyAppSQL: - ERROR - Error during command execution. Action failed: Cannot interact with an empty database.
+2026-02-05 15:25:13,731 - PyAppSQL.Repositpory: - ERROR - Error during integrity check: Populate the database with the data.
+2026-02-05 15:25:13,731 - PyAppSQL: - ERROR - Error during command execution. Action failed: Populate the database with the data.
+2026-02-05 15:25:27,893 - PyAppSQL.Repositpory: - INFO - Wiping old data from table: room
+2026-02-05 15:25:39,592 - PyAppSQL.Repositpory: - INFO - Wiping old data from table: student
+2026-02-05 15:25:58,816 - PyAppSQL.Repositpory: - ERROR - Error during integrity check: Populate the database with the data.
+2026-02-05 15:25:58,816 - PyAppSQL: - ERROR - Error during command execution. Action failed: Populate the database with the data.
+2026-02-05 15:26:18,040 - PyAppSQL.Repositpory: - ERROR - Error during integrity check: Populate the database with the data.
+2026-02-05 15:26:18,040 - PyAppSQL: - ERROR - Error during command execution. Action failed: Populate the database with the data.
+2026-02-05 15:27:50,410 - PyAppSQL: - ERROR - Error during command execution. Wrong command.

@@ -8,3 +8,4 @@ __pycache__/
 *.dist-info/
 pyvenv.cfg
 app.log
+*.xml
