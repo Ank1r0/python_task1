@@ -1,16 +1,24 @@
 import os
 import json
 
+"""
+Utility class for robust file system interactions and data ingestion.
+
+Acts as a defensive layer that validates file existence, integrity, and 
+permissions before allowing the application to occupy memory with external 
+data. This prevents 'Silent Failures' where an app might crash deep inside 
+a logic loop due to a missing or inaccessible file.
+"""
 
 class input_instrument:
 
     @staticmethod
     def read_json_s(path):
 
-        if not os.path.exists:
+        if not os.path.exists(path):
             raise ValueError("Path doesn't exist.")
 
-        elif not os.path.isfile:
+        elif not os.path.isfile(path):
             raise ValueError("This object is not a file.")
 
         elif not path.lower().endswith(".json"):

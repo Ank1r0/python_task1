@@ -118,7 +118,7 @@ class Repository:
 
         try:
             # 2. Run SQL Setup Scripts
-            # Always run the base DB setup (idempotent checks usually inside the SQL)
+            # Always run the base DB setup 
             cursor.execute(SqlReader.load_query("init_db.sql"))
             cursor.execute(SqlReader.load_query("drop_constraint.sql"))
             cursor.execute(SqlReader.load_query(config["init_script"]))

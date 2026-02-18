@@ -156,3 +156,19 @@ pyodbc.ProgrammingError: ('42000', "[42000] [Microsoft][ODBC Driver 18 for SQL S
 2026-02-05 15:26:18,040 - PyAppSQL.Repositpory: - ERROR - Error during integrity check: Populate the database with the data.
 2026-02-05 15:26:18,040 - PyAppSQL: - ERROR - Error during command execution. Action failed: Populate the database with the data.
 2026-02-05 15:27:50,410 - PyAppSQL: - ERROR - Error during command execution. Wrong command.
+2026-02-05 16:06:07,400 - PyAppSQL.Repositpory: - INFO - Wiping old data from table: room
+2026-02-05 16:06:17,850 - PyAppSQL.Repositpory: - INFO - Wiping old data from table: student
+2026-02-05 16:06:56,815 - PyAppSQL: - ERROR - Error during command execution. Wrong command.
+2026-02-05 17:06:00,122 - PyAppSQL: - ERROR - Error during command execution. Wrong command.
+2026-02-11 11:57:34,360 - PyAppSQL: - ERROR - Error during command execution. Action failed: Path doesn't exist.
+2026-02-11 11:57:39,358 - PyAppSQL.Repositpory: - INFO - Wiping old data from table: room
+2026-02-11 11:57:39,361 - PyAppSQL.Repositpory: - ERROR - Critical failure loading rooms
+Traceback (most recent call last):
+  File "C:\MyFolder\PythonAllProjects\python_task1\task1\app\database\repository.py", line 130, in load_experiment_not_safe
+    cursor.execute(f"TRUNCATE TABLE {db_table_name}")
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyodbc.ProgrammingError: ('42000', "[42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Cannot truncate table 'room' because it is being referenced by a FOREIGN KEY constraint. (4712) (SQLExecDirectW)")
+2026-02-11 11:57:39,364 - PyAppSQL: - ERROR - Error during command execution. Action failed: Database load failed for rooms: ('42000', "[42000] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Cannot truncate table 'room' because it is being referenced by a FOREIGN KEY constraint. (4712) (SQLExecDirectW)")
+2026-02-11 11:57:41,970 - PyAppSQL.Repositpory: - INFO - Wiping old data from table: room
+2026-02-11 11:58:11,310 - PyAppSQL: - ERROR - Error during command execution. Wrong command.
+2026-02-11 11:58:29,490 - PyAppSQL.Repositpory: - INFO - Wiping old data from table: student

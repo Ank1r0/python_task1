@@ -19,7 +19,7 @@ class SqlReader:
 
         base_path = os.path.dirname(os.path.dirname(__file__))
         file_path = os.path.join(
-            base_path, f"sql_queries/reports/query_task{query_id}.sql"
+            base_path, f"sql_queries/reports/query_task{query_id}.sql" #maybe change to names later.
         )
 
         try:
